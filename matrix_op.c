@@ -1,7 +1,7 @@
 #include "matrix_op.h"
 #include <stdio.h>
-#include <math.h> // 包含數學函式，如 fabs
-
+#include <math.h> 
+#include <float.h> 
 // 輔助函式：計算 2x2 矩陣的行列式 (用於伴隨矩陣)
 double det_2x2(double a, double b, double c, double d) {
     return a * d - b * c;
@@ -159,4 +159,44 @@ Matrix matrix_adjoint(Matrix A) {
     
     return adj;
 }
+<<<<<<< HEAD
 >>>>>>> a806fed101dc31a8abb4163fc2f992bdfe52f7d3
+=======
+// 實作 9: 進階運算 - 逆矩陣 (A⁻¹)
+Matrix matrix_inverse(Matrix A) {
+    Matrix result;
+    int i, j; // C89 宣告
+    
+    // 1. 計算行列式
+    double det = matrix_determinant(A);
+    
+    // 檢查行列式是否接近零 (矩陣不可逆)
+    // 容忍度使用 1e-9
+    if (fabs(det) < 1e-9) { 
+        printf("Error: Determinant is zero (%.4f). Matrix is not invertible.\n", det);
+        
+        // 返回一個零矩陣作為錯誤標記
+        for (i = 0; i < SIZE; i++) {
+            for (j = 0; j < SIZE; j++) {
+                result.data[i][j] = 0.0;
+            }
+        }
+        return result;
+    }
+
+    // 2. 計算伴隨矩陣
+    Matrix adj = matrix_adjoint(A);
+    
+    // 3. 計算 A⁻¹ = (1/det) * Adj(A)
+    double inv_det = 1.0 / det;
+    
+    for (i = 0; i < SIZE; i++) {
+        for (j = 0; j < SIZE; j++) {
+            // 將伴隨矩陣的每個元素除以行列式
+            result.data[i][j] = adj.data[i][j] * inv_det;
+        }
+    }
+    
+    return result;
+}
+>>>>>>> 92813a9ca24d2a718325de0aae197ecbec47989a
