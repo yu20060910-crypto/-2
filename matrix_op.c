@@ -1,30 +1,81 @@
-#ifndef MATRIX_OP_H
-#define MATRIX_OP_H
+#include "matrix_op.h"
+#include <stdio.h>
+#include <math.h> // åŒ…å«æ•¸å­¸å‡½å¼ï¼Œå¦‚ fabs
 
-#define SIZE 3 // ©w¸q¯x°}ºû«×¬° 3x3
+// è¼”åŠ©å‡½å¼ï¼šè¨ˆç®— 2x2 çŸ©é™£çš„è¡Œåˆ—å¼ (ç”¨æ–¼ä¼´éš¨çŸ©é™£)
+double det_2x2(double a, double b, double c, double d) {
+    return a * d - b * c;
+}
 
-// ¯x°}µ²ºc (¨Ï¥Î double «¬§OÀx¦s¤¸¯À)
-typedef struct {
-    double data[SIZE][SIZE];
-} Matrix;
+// å¯¦ä½œ 1: è¼”åŠ©å‡½å¼ - é¡¯ç¤ºçŸ©é™£å…§å®¹
+void matrix_print(Matrix M) {
+    int i, j; // C89 å®£å‘Š
+    printf("[\n");
+    for (i = 0; i < SIZE; i++) {
+        printf("  ");
+        for (j = 0; j < SIZE; j++) {
+            printf("%.4f ", M.data[i][j]);
+        }
+        printf("\n");
+    }
+    printf("]\n");
+}
 
-// --- ¨ç¦¡«Å§i (Functions Declarations) ---
+// å¯¦ä½œ 2: åŸºæœ¬é‹ç®— - çŸ©é™£åŠ æ³• (A + B)
+Matrix matrix_add(Matrix A, Matrix B) {
+    Matrix result;
+    int i, j; // C89 å®£å‘Š
+    for (i = 0; i < SIZE; i++) {
+        for (j = 0; j < SIZE; j++) {
+            result.data[i][j] = A.data[i][j] + B.data[i][j];
+        }
+    }
+    return result;
+}
 
-// »²§U¨ç¦¡
-void matrix_print(Matrix M); // Åã¥Ü¯x°}¤º®e
+// å¯¦ä½œ 3: åŸºæœ¬é‹ç®— - çŸ©é™£æ¸›æ³• (A - B)
+Matrix matrix_subtract(Matrix A, Matrix B) {
+    Matrix result;
+    int i, j; // C89 å®£å‘Š
+    for (i = 0; i < SIZE; i++) {
+        for (j = 0; j < SIZE; j++) {
+            result.data[i][j] = A.data[i][j] - B.data[i][j];
+        }
+    }
+    return result;
+}
 
-// °ò¥»¹Bºâ
-Matrix matrix_add(Matrix A, Matrix B);          // ¥[ªk (A + B)
-Matrix matrix_subtract(Matrix A, Matrix B);     // ´îªk (A - B)
-Matrix matrix_element_multiply(Matrix A, Matrix B); // ¤¸¯À­¼ªk ( Hadamard product $A \circ B$)
+// å¯¦ä½œ 4: åŸºæœ¬é‹ç®— - å…ƒç´ ä¹˜æ³• (A âˆ˜ B)
+Matrix matrix_element_multiply(Matrix A, Matrix B) {
+    Matrix result;
+    int i, j; // C89 å®£å‘Š
+    for (i = 0; i < SIZE; i++) {
+        for (j = 0; j < SIZE; j++) {
+            result.data[i][j] = A.data[i][j] * B.data[i][j];
+        }
+    }
+    return result;
+}
 
-// ½u©Ê¥N¼Æ¹Bºâ
-Matrix matrix_multiply(Matrix A, Matrix B);     // ¯x°}­¼ªk (A * B)
-Matrix matrix_transpose(Matrix A);              // Âà¸m ($A^T$)
+// å¯¦ä½œ 5: ç·šæ€§ä»£æ•¸é‹ç®— - çŸ©é™£ä¹˜æ³• (A * B)
+Matrix matrix_multiply(Matrix A, Matrix B) {
+    Matrix result;
+    int i, j, k; // C89 å®£å‘Š
+    
+    // ç¢ºä¿çµæœçŸ©é™£åˆå§‹åŒ–ç‚º 0
+    for (i = 0; i < SIZE; i++) {
+        for (j = 0; j < SIZE; j++) {
+            result.data[i][j] = 0.0;
+        }
+    }
 
-// ¶i¶¥¹Bºâ
-double matrix_determinant(Matrix A);    // ¦æ¦C¦¡ ($Det(A)$)
-Matrix matrix_adjoint(Matrix A);        // ¦ñÀH¯x°} ($Adj(A)$)
-Matrix matrix_inverse(Matrix A);        // °f¯x°} ($A^{-1}$)
-
-#endif // MATRIX_OP_H
+    // é€²è¡ŒçŸ©é™£ä¹˜æ³•é‹ç®— C[i][j] = A[i][k] * B[k][j]
+    for (i = 0; i < SIZE; i++) {       
+        for (j = 0; j < SIZE; j++) {   
+            for (k = 0; k < SIZE; k++) { 
+                result.data[i][j] += A.data[i][k] * B.data[k][j];
+            }
+        }
+    }
+    return result;
+}
