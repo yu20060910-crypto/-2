@@ -79,3 +79,16 @@ Matrix matrix_multiply(Matrix A, Matrix B) {
     }
     return result;
 }
+// 實作 6: 線性代數運算 - 矩陣轉置 (Aᵀ)
+Matrix matrix_transpose(Matrix A) {
+    Matrix result;
+    int i, j; // C89 宣告
+    
+    // 互換行和列：result[i][j] = A[j][i]
+    for (i = 0; i < SIZE; i++) {
+        for (j = 0; j < SIZE; j++) {
+            result.data[i][j] = A.data[j][i];
+        }
+    }
+    return result;
+}
