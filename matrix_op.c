@@ -28,3 +28,25 @@ Matrix matrix_adjoint(Matrix A);        // 伴隨矩陣 ($Adj(A)$)
 Matrix matrix_inverse(Matrix A);        // 逆矩陣 ($A^{-1}$)
 
 #endif // MATRIX_OP_H
+// 實作：矩陣乘法 (A * B)
+Matrix matrix_multiply(Matrix A, Matrix B) {
+    Matrix result;
+    
+    // 確保結果矩陣初始化為 0
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            result.data[i][j] = 0.0;
+        }
+    }
+
+    // C[i][j] = A 的第 i 行 與 B 的第 j 列 的點積 (dot product)
+    // 需要使用三個巢狀迴圈
+    for (int i = 0; i < SIZE; i++) {       // 遍歷結果矩陣的行 (i)
+        for (int j = 0; j < SIZE; j++) {   // 遍歷結果矩陣的列 (j)
+            for (int k = 0; k < SIZE; k++) { // 執行乘積和 (k)
+                result.data[i][j] += A.data[i][k] * B.data[k][j];
+            }
+        }
+    }
+    return result;
+}
